@@ -1,0 +1,7 @@
+- индексы через size_t
+- аллокатор на malloc, calloc, realloc, free в ините
+- placement-new
+- переиспользовать copy конструктор и move assignment в копирующем присваивании
+- std::swap
+- копирующий конструктор исправить при исключении
+- https://youtu.be/P1LcWg6K3WE?si=h2RHFibuPKC9rgki
