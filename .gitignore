@@ -1,0 +1,28 @@
+*.o
+*.obj
+*.exe
+*.out
+*.log
+*.swp
+*.DS_Store
+
+# C++ 
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+LR1/cpp/build/
+
+LR1/cpp/tests/*.exe
+LR1/cpp/tests/*.out
+
+# Rust
+LR1/rust/target/
+
+LR1/rust/Cargo.lock
+
+# IDE
+*.rs.bk
+.idea/
+*.vscode/
