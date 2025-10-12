@@ -1,11 +1,168 @@
-cmake_minimum_required(VERSION 3.10)
-project(LR1)
+cmake_minimum_required(VERSION 3.16)
+project(ProgStructures LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories(include)
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
-add_executable(main
-    src/main.cpp
+# =====================
+# LinkedList (task 2)
+# =====================
+add_library(linkedlist_lib
+    src/b/LinkedList.cpp
+)
+target_include_directories(linkedlist_lib PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(linkedlist_cli
+    src/b/LinkedListCLI.cpp
+)
+target_link_libraries(linkedlist_cli linkedlist_lib)
+
+add_executable(test_linkedlist
+    tests/b/LinkedListTests.cpp
+)
+target_link_libraries(test_linkedlist linkedlist_lib)
+
+# =====================
+# Array (task 1)
+# =====================
+add_library(array_lib
+    src/a/Array.cpp
+)
+target_include_directories(array_lib PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(array_cli
+    src/a/ArrayCLI.cpp
+)
+target_link_libraries(array_cli array_lib)
+
+add_executable(test_array
+    tests/a/ArrayTests.cpp
+)
+target_link_libraries(test_array array_lib)
+
+# =====================
+# Doubly Linked List (task c)
+# =====================
+add_library(dlinkedlist_lib
+    src/c/DoublyLinkedList.cpp
+)
+target_include_directories(dlinkedlist_lib PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(dlinkedlist_cli
+    src/c/DoublyLinkedListCLI.cpp
+)
+target_link_libraries(dlinkedlist_cli dlinkedlist_lib)
+
+add_executable(test_dlinkedlist
+    tests/c/DoublyLinkedListTests.cpp
+)
+target_link_libraries(test_dlinkedlist dlinkedlist_lib)
+
+# =====================
+# Stack (task d)
+# =====================
+add_library(stack_lib
+    src/d/Stack.cpp
+)
+target_include_directories(stack_lib PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(stack_cli
+    src/d/StackCLI.cpp
+)
+target_link_libraries(stack_cli stack_lib)
+
+add_executable(test_stack
+    tests/d/StackTests.cpp
+)
+target_link_libraries(test_stack stack_lib)
+
+# =====================
+# Queue (task e)
+# =====================
+add_library(queue_lib
+    src/e/Queue.cpp
+)
+target_include_directories(queue_lib PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(queue_cli
+    src/e/QueueCLI.cpp
+)
+target_link_libraries(queue_cli queue_lib)
+
+add_executable(test_queue
+    tests/e/QueueTests.cpp
+)
+target_link_libraries(test_queue queue_lib)
+
+# =====================
+# Red-Black Tree (task f)
+# =====================
+add_library(rbtree_lib
+    src/f/RedBlackTree.cpp
+)
+target_include_directories(rbtree_lib PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(rbtree_cli
+    src/f/RedBlackTreeCLI.cpp
+)
+target_link_libraries(rbtree_cli rbtree_lib)
+
+add_executable(test_rbtree
+    tests/f/RedBlackTreeTests.cpp
+)
+target_link_libraries(test_rbtree rbtree_lib)
+
+# =====================
+# Автозапуск тестов после сборки CLI
+# =====================
+add_custom_command(
+    TARGET linkedlist_cli POST_BUILD
+    COMMAND test_linkedlist
+    COMMENT "Running tests for LinkedList..."
+)
+
+add_custom_command(
+    TARGET array_cli POST_BUILD
+    COMMAND test_array
+    COMMENT "Running tests for Array..."
+)
+
+add_custom_command(
+    TARGET dlinkedlist_cli POST_BUILD
+    COMMAND test_dlinkedlist
+    COMMENT "Running tests for Doubly Linked List..."
+)
+
+add_custom_command(
+    TARGET stack_cli POST_BUILD
+    COMMAND test_stack
+    COMMENT "Running tests for Stack..."
+)
+
+add_custom_command(
+    TARGET queue_cli POST_BUILD
+    COMMAND test_queue
+    COMMENT "Running tests for Queue..."
+)
+
+add_custom_command(
+    TARGET rbtree_cli POST_BUILD
+    COMMAND test_rbtree
+    COMMENT "Running tests for Red-Black Tree..."
+)
+
+# =====================
+# Таргет для запуска всех тестов
+# =====================
+add_custom_target(run_all_tests
+    COMMAND test_linkedlist
+    COMMAND test_array
+    COMMAND test_dlinkedlist
+    COMMAND test_stack
+    COMMAND test_queue
+    COMMAND test_rbtree
+    DEPENDS test_linkedlist test_array test_dlinkedlist test_stack test_queue test_rbtree
+    COMMENT "Running all tests for all data structures..."
 )
