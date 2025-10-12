@@ -12,15 +12,11 @@ CMakeCache.txt
 cmake_install.cmake
 Makefile
 
-LR1/cpp/build/
-
-LR1/cpp/tests/*.exe
-LR1/cpp/tests/*.out
+build/
 
 # Rust
-LR1/rust/target/
-
-LR1/rust/Cargo.lock
+target/
+Cargo.lock
 
 # IDE
 *.rs.bk
