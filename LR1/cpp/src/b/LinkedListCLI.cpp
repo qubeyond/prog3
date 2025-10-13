@@ -5,18 +5,15 @@
 
 const std::string DATA_FILE = "list.txt";
 
-// Загрузка списка из файла при старте
 void loadList(LinkedList &list) {
     clearList(list);
     readFromFile(list, DATA_FILE);
 }
 
-// Сохранение списка при изменении
 void saveList(LinkedList &list) {
     writeToFile(list, DATA_FILE);
 }
 
-// Парсер команд
 void processCommand(LinkedList &list, const std::string &commandLine) {
     std::stringstream ss(commandLine);
     std::string cmd;
@@ -34,23 +31,24 @@ void processCommand(LinkedList &list, const std::string &commandLine) {
         return;
     }
 
-    // --- операции добавления ---
-    if (cmd == "LADDH") { // add head
-        int val; ss >> val;
+    if (cmd == "LADDH") {
+        std::string val; ss >> val;
         addHead(list, val);
         saveList(list);
         std::cout << "Added " << val << " to head.\n";
         return;
     }
-    if (cmd == "LADDT") { // add tail
-        int val; ss >> val;
+
+    if (cmd == "LADDT") {
+        std::string val; ss >> val;
         addTail(list, val);
         saveList(list);
         std::cout << "Added " << val << " to tail.\n";
         return;
     }
-    if (cmd == "LADDB") { // add before
-        int target, val; ss >> target >> val;
+
+    if (cmd == "LADDB") {
+        std::string target, val; ss >> target >> val;
         if (addBefore(list, target, val)) {
             saveList(list);
             std::cout << "Inserted " << val << " before " << target << ".\n";
@@ -59,8 +57,9 @@ void processCommand(LinkedList &list, const std::string &commandLine) {
         }
         return;
     }
-    if (cmd == "LADDA") { // add after
-        int target, val; ss >> target >> val;
+
+    if (cmd == "LADDA") {
+        std::string target, val; ss >> target >> val;
         if (addAfter(list, target, val)) {
             saveList(list);
             std::cout << "Inserted " << val << " after " << target << ".\n";
@@ -70,7 +69,6 @@ void processCommand(LinkedList &list, const std::string &commandLine) {
         return;
     }
 
-    // --- операции удаления ---
     if (cmd == "LREMH") {
         if (removeHead(list)) {
             saveList(list);
@@ -80,6 +78,7 @@ void processCommand(LinkedList &list, const std::string &commandLine) {
         }
         return;
     }
+
     if (cmd == "LREMT") {
         if (removeTail(list)) {
             saveList(list);
@@ -89,8 +88,9 @@ void processCommand(LinkedList &list, const std::string &commandLine) {
         }
         return;
     }
+
     if (cmd == "LREMV") {
-        int val; ss >> val;
+        std::string val; ss >> val;
         if (removeValue(list, val)) {
             saveList(list);
             std::cout << "Removed value " << val << ".\n";
@@ -100,7 +100,6 @@ void processCommand(LinkedList &list, const std::string &commandLine) {
         return;
     }
 
-    // --- поиск ---
     if (cmd == "LGET") {
         int idx; ss >> idx;
         Node* n = getNode(list, idx);
@@ -108,8 +107,9 @@ void processCommand(LinkedList &list, const std::string &commandLine) {
         else std::cout << "Index out of range.\n";
         return;
     }
+
     if (cmd == "LFIND") {
-        int val; ss >> val;
+        std::string val; ss >> val;
         Node* n = findValue(list, val);
         if (n) std::cout << "Found value: " << val << "\n";
         else std::cout << "Value not found.\n";
@@ -125,18 +125,18 @@ int main() {
     loadList(list);
 
     std::cout << "LinkedList CLI. Commands:\n"
-              << "  LADDH <val>   - add to head\n"
-              << "  LADDT <val>   - add to tail\n"
-              << "  LADDB <target> <val> - add before target\n"
-              << "  LADDA <target> <val> - add after target\n"
-              << "  LREMH         - remove head\n"
-              << "  LREMT         - remove tail\n"
-              << "  LREMV <val>   - remove by value\n"
-              << "  LGET <index>  - get node by index\n"
-              << "  LFIND <val>   - find node by value\n"
-              << "  LCLEAR        - clear list\n"
-              << "  PRINT         - print list\n"
-              << "  EXIT          - quit\n";
+              << "  LADDH <val>               - add to head\n"
+              << "  LADDT <val>               - add to tail\n"
+              << "  LADDB <target> <val>      - add before target\n"
+              << "  LADDA <target> <val>      - add after target\n"
+              << "  LREMH                     - remove head\n"
+              << "  LREMT                     - remove tail\n"
+              << "  LREMV <val>               - remove by value\n"
+              << "  LGET <index>              - get node by index\n"
+              << "  LFIND <val>               - find node by value\n"
+              << "  LCLEAR                    - clear list\n"
+              << "  PRINT                     - print list\n"
+              << "  EXIT                      - quit\n";
 
     std::string line;
     while (true) {

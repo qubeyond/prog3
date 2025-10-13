@@ -1,6 +1,6 @@
+#include "c/DoublyLinkedList.hpp"
 #include <iostream>
 #include <sstream>
-#include "c/DoublyLinkedList.hpp"
 
 const std::string DATA_FILE = "dlist.txt";
 
@@ -21,17 +21,90 @@ void processCommand(DLinkedList &list, const std::string &line) {
     if (cmd == "PRINT") { printList(list); return; }
     if (cmd == "DCLEAR") { clearList(list); saveList(list); std::cout << "List cleared.\n"; return; }
 
-    if (cmd == "DADDH") { int val; ss >> val; addHead(list, val); saveList(list); std::cout << "Added " << val << " to head.\n"; return; }
-    if (cmd == "DADDT") { int val; ss >> val; addTail(list, val); saveList(list); std::cout << "Added " << val << " to tail.\n"; return; }
-    if (cmd == "DADDB") { int target, val; ss >> target >> val; if (addBefore(list, target, val)) { saveList(list); std::cout << "Inserted " << val << " before " << target << ".\n"; } else { std::cout << "Target not found.\n"; } return; }
-    if (cmd == "DADDA") { int target, val; ss >> target >> val; if (addAfter(list, target, val)) { saveList(list); std::cout << "Inserted " << val << " after " << target << ".\n"; } else { std::cout << "Target not found.\n"; } return; }
+    if (cmd == "DADDH") {
+        std::string val; ss >> val;
+        addHead(list, val);
+        saveList(list);
+        std::cout << "Added " << val << " to head.\n";
+        return;
+    }
 
-    if (cmd == "DREMH") { if (removeHead(list)) { saveList(list); std::cout << "Head removed.\n"; } else std::cout << "List empty.\n"; return; }
-    if (cmd == "DREMT") { if (removeTail(list)) { saveList(list); std::cout << "Tail removed.\n"; } else std::cout << "List empty.\n"; return; }
-    if (cmd == "DREMV") { int val; ss >> val; if (removeValue(list, val)) { saveList(list); std::cout << "Removed " << val << ".\n"; } else std::cout << "Value not found.\n"; return; }
+    if (cmd == "DADDT") {
+        std::string val; ss >> val;
+        addTail(list, val);
+        saveList(list);
+        std::cout << "Added " << val << " to tail.\n";
+        return;
+    }
 
-    if (cmd == "DGET") { int idx; ss >> idx; DNode* n = getNode(list, idx); if (n) std::cout << "Node[" << idx << "] = " << n->value << "\n"; else std::cout << "Index out of range.\n"; return; }
-    if (cmd == "DFIND") { int val; ss >> val; DNode* n = findValue(list, val); if (n) std::cout << "Found " << val << "\n"; else std::cout << "Value not found.\n"; return; }
+    if (cmd == "DADDB") {
+        std::string target, val; ss >> target >> val;
+        if (addBefore(list, target, val)) {
+            saveList(list);
+            std::cout << "Inserted " << val << " before " << target << ".\n";
+        } else {
+            std::cout << "Target " << target << " not found.\n";
+        }
+        return;
+    }
+
+    if (cmd == "DADDA") {
+        std::string target, val; ss >> target >> val;
+        if (addAfter(list, target, val)) {
+            saveList(list);
+            std::cout << "Inserted " << val << " after " << target << ".\n";
+        } else {
+            std::cout << "Target " << target << " not found.\n";
+        }
+        return;
+    }
+
+    if (cmd == "DREMH") {
+        if (removeHead(list)) {
+            saveList(list);
+            std::cout << "Head removed.\n";
+        } else {
+            std::cout << "List empty.\n";
+        }
+        return;
+    }
+
+    if (cmd == "DREMT") {
+        if (removeTail(list)) {
+            saveList(list);
+            std::cout << "Tail removed.\n";
+        } else {
+            std::cout << "List empty.\n";
+        }
+        return;
+    }
+
+    if (cmd == "DREMV") {
+        std::string val; ss >> val;
+        if (removeValue(list, val)) {
+            saveList(list);
+            std::cout << "Removed value " << val << ".\n";
+        } else {
+            std::cout << "Value not found.\n";
+        }
+        return;
+    }
+
+    if (cmd == "DGET") {
+        int idx; ss >> idx;
+        DNode* n = getNode(list, idx);
+        if (n) std::cout << "Node[" << idx << "] = " << n->value << "\n";
+        else std::cout << "Index out of range.\n";
+        return;
+    }
+
+    if (cmd == "DFIND") {
+        std::string val; ss >> val;
+        DNode* n = findValue(list, val);
+        if (n) std::cout << "Found value: " << val << "\n";
+        else std::cout << "Value not found.\n";
+        return;
+    }
 
     std::cout << "Unknown command: " << cmd << "\n";
 }
@@ -41,19 +114,19 @@ int main() {
     initDList(list);
     loadList(list);
 
-    std::cout << "Doubly Linked List CLI. Commands:\n"
-              << "  DADDH <val>        - add to head\n"
-              << "  DADDT <val>        - add to tail\n"
-              << "  DADDB <target> <val> - add before target\n"
-              << "  DADDA <target> <val> - add after target\n"
-              << "  DREMH              - remove head\n"
-              << "  DREMT              - remove tail\n"
-              << "  DREMV <val>        - remove by value\n"
-              << "  DGET <index>       - get node by index\n"
-              << "  DFIND <val>        - find node by value\n"
-              << "  DCLEAR             - clear list\n"
-              << "  PRINT              - print list\n"
-              << "  EXIT               - quit\n";
+    std::cout << "DoublyLinkedList CLI. Commands:\n"
+              << "  DADDH <val>           - add to head\n"
+              << "  DADDT <val>           - add to tail\n"
+              << "  DADDB <target> <val>  - add before target\n"
+              << "  DADDA <target> <val>  - add after target\n"
+              << "  DREMH                 - remove head\n"
+              << "  DREMT                 - remove tail\n"
+              << "  DREMV <val>           - remove by value\n"
+              << "  DGET <index>          - get node by index\n"
+              << "  DFIND <val>           - find node by value\n"
+              << "  DCLEAR                - clear list\n"
+              << "  PRINT                 - print list\n"
+              << "  EXIT                  - quit\n";
 
     std::string line;
     while (true) {

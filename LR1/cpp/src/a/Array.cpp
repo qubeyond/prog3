@@ -3,104 +3,91 @@
 #include <fstream>
 #include <algorithm>
 
-// =======================
-// Инициализация
-// =======================
+const int MIN_CAPACITY = 10;
+
 void initArray(Array &arr, int initialCapacity) {
-    arr.data = new int[initialCapacity];
+    arr.capacity = std::max(initialCapacity, MIN_CAPACITY);
+    arr.data = new std::string[arr.capacity];
     arr.size = 0;
-    arr.capacity = initialCapacity;
 }
 
-// =======================
-// Вспомогательная функция увеличения
-// =======================
 void ensureCapacity(Array &arr) {
     if (arr.size >= arr.capacity) {
-        arr.capacity *= 2;
-        int* newData = new int[arr.capacity];
-        std::copy(arr.data, arr.data + arr.size, newData);
+        int newCap = (arr.capacity > 0) ? arr.capacity * 2 : MIN_CAPACITY;
+        std::string* newData = new std::string[newCap];
+        if (arr.data && arr.size > 0) std::copy(arr.data, arr.data + arr.size, newData);
         delete[] arr.data;
         arr.data = newData;
+        arr.capacity = newCap;
     }
 }
 
-// =======================
-// Добавление
-// =======================
-void addEnd(Array &arr, int val) {
+void shrinkCapacity(Array &arr) {
+    if (arr.capacity > MIN_CAPACITY && arr.size < arr.capacity / 4) {
+        int newCap = std::max(arr.capacity / 2, MIN_CAPACITY);
+        std::string* newData = new std::string[newCap];
+        if (arr.data && arr.size > 0) std::copy(arr.data, arr.data + arr.size, newData);
+        delete[] arr.data;
+        arr.data = newData;
+        arr.capacity = newCap;
+    }
+}
+
+void addEnd(Array &arr, const std::string &val) {
     ensureCapacity(arr);
     arr.data[arr.size++] = val;
 }
 
-bool addAt(Array &arr, int index, int val) {
+bool addAt(Array &arr, int index, const std::string &val) {
     if (index < 0 || index > arr.size) return false;
     ensureCapacity(arr);
-    for (int i = arr.size; i > index; i--) {
-        arr.data[i] = arr.data[i-1];
-    }
+    for (int i = arr.size; i > index; i--) arr.data[i] = arr.data[i-1];
     arr.data[index] = val;
     arr.size++;
     return true;
 }
 
-// =======================
-// Получение и замена
-// =======================
-int get(Array &arr, int index) {
+std::string get(Array &arr, int index) {
     if (index < 0 || index >= arr.size) throw std::out_of_range("Index out of range");
     return arr.data[index];
 }
 
-bool set(Array &arr, int index, int val) {
+bool set(Array &arr, int index, const std::string &val) {
     if (index < 0 || index >= arr.size) return false;
     arr.data[index] = val;
     return true;
 }
 
-// =======================
-// Удаление
-// =======================
 bool removeAt(Array &arr, int index) {
     if (index < 0 || index >= arr.size) return false;
-    for (int i = index; i < arr.size - 1; i++) {
-        arr.data[i] = arr.data[i+1];
-    }
+    for (int i = index; i < arr.size - 1; i++) arr.data[i] = arr.data[i+1];
     arr.size--;
+    shrinkCapacity(arr);
     return true;
 }
 
-// =======================
-// Размер
-// =======================
 int length(Array &arr) {
     return arr.size;
 }
 
-// =======================
-// Работа с файлами
-// =======================
 void readFromFile(Array &arr, const std::string &filename) {
+    if (!arr.data || arr.capacity == 0) initArray(arr);
     std::ifstream in(filename);
     if (!in.is_open()) return;
-    int val;
-    while (in >> val) {
-        addEnd(arr, val);
-    }
+    std::string val;
+    while (in >> val) addEnd(arr, val);
     in.close();
 }
 
 void writeToFile(Array &arr, const std::string &filename) {
     std::ofstream out(filename);
     for (int i = 0; i < arr.size; i++) {
-        out << arr.data[i] << " ";
+        out << arr.data[i];
+        if (i < arr.size - 1) out << " ";
     }
     out.close();
 }
 
-// =======================
-// Очистка массива
-// =======================
 void clearArray(Array &arr) {
     delete[] arr.data;
     arr.data = nullptr;

@@ -1,6 +1,7 @@
+#include "f/RedBlackTree.hpp"
 #include <cassert>
 #include <iostream>
-#include "f/RedBlackTree.hpp"
+#include <cstdio>
 
 #define GREEN "\033[32m"
 #define RED   "\033[31m"
@@ -52,32 +53,20 @@ void testClear() {
     assert(!t.root);
 }
 
-int fails = 0;
-int total = 0;
-
-void runTest(const std::string &name, void(*func)()) {
-    total++;
-    try {
-        func();
-        std::cout << GREEN << "." << RESET;
-    } catch (...) {
-        fails++;
-        std::cout << RED << "F" << RESET;
-        std::cerr << "\nTest failed: " << name << std::endl;
-    }
-}
-
 int main() {
-    runTest("testInsertFind", testInsertFind);
-    runTest("testRemove", testRemove);
-    runTest("testFileIO", testFileIO);
-    runTest("testClear", testClear);
-
+    int fails = 0;
+    int total = 0;
+    auto run = [&](const char* name, void(*f)()){
+        ++total;
+        try { f(); std::cout << GREEN << "." << RESET; }
+        catch(...) { ++fails; std::cout << RED << "F" << RESET; std::cerr << "\nTest failed: " << name << std::endl; }
+    };
+    run("testInsertFind", testInsertFind);
+    run("testRemove", testRemove);
+    run("testFileIO", testFileIO);
+    run("testClear", testClear);
     std::cout << std::endl;
-    if (fails == 0)
-        std::cout << GREEN << "All " << total << " tests passed" << RESET << std::endl;
-    else
-        std::cout << RED << fails << " of " << total << " tests failed" << RESET << std::endl;
-
+    if (fails == 0) std::cout << GREEN << "All " << total << " tests passed" << RESET << std::endl;
+    else std::cout << RED << fails << " of " << total << " tests failed" << RESET << std::endl;
     return fails ? 1 : 0;
 }

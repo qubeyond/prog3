@@ -1,9 +1,9 @@
+#include "f/RedBlackTree.hpp"
 #include <iostream>
 #include <sstream>
-#include "f/RedBlackTree.hpp"
 
 const std::string DATA_FILE = "rbtree.txt";
-RBTree tree;
+static RBTree tree;
 
 void loadTree() {
     clearTree(tree);

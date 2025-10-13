@@ -14,14 +14,18 @@ void saveArray(Array &arr) {
     writeToFile(arr, DATA_FILE);
 }
 
+void printArray(Array &arr) {
+    for (int i = 0; i < arr.size; i++) std::cout << arr.data[i] << (i < arr.size - 1 ? " " : "");
+    std::cout << std::endl;
+}
+
 void processCommand(Array &arr, const std::string &commandLine) {
     std::stringstream ss(commandLine);
     std::string cmd;
     ss >> cmd;
 
     if (cmd == "PRINT") {
-        for (int i = 0; i < arr.size; i++) std::cout << arr.data[i] << " ";
-        std::cout << std::endl;
+        printArray(arr);
         return;
     }
 
@@ -34,7 +38,7 @@ void processCommand(Array &arr, const std::string &commandLine) {
     }
 
     if (cmd == "AADDEND") {
-        int val; ss >> val;
+        std::string val; ss >> val;
         addEnd(arr, val);
         saveArray(arr);
         std::cout << "Added " << val << " to end.\n";
@@ -42,21 +46,18 @@ void processCommand(Array &arr, const std::string &commandLine) {
     }
 
     if (cmd == "AADD") {
-        int index, val; ss >> index >> val;
+        int index; std::string val; ss >> index >> val;
         if (addAt(arr, index, val)) {
             saveArray(arr);
             std::cout << "Inserted " << val << " at index " << index << ".\n";
-        } else {
-            std::cout << "Index out of range.\n";
-        }
+        } else std::cout << "Index out of range.\n";
         return;
     }
 
     if (cmd == "AGET") {
         int index; ss >> index;
         try {
-            int val = get(arr, index);
-            std::cout << "Array[" << index << "] = " << val << "\n";
+            std::cout << "Array[" << index << "] = " << get(arr, index) << "\n";
         } catch (...) {
             std::cout << "Index out of range.\n";
         }
@@ -64,13 +65,11 @@ void processCommand(Array &arr, const std::string &commandLine) {
     }
 
     if (cmd == "ASET") {
-        int index, val; ss >> index >> val;
+        int index; std::string val; ss >> index >> val;
         if (set(arr, index, val)) {
             saveArray(arr);
             std::cout << "Set index " << index << " = " << val << "\n";
-        } else {
-            std::cout << "Index out of range.\n";
-        }
+        } else std::cout << "Index out of range.\n";
         return;
     }
 
@@ -79,9 +78,7 @@ void processCommand(Array &arr, const std::string &commandLine) {
         if (removeAt(arr, index)) {
             saveArray(arr);
             std::cout << "Removed element at index " << index << ".\n";
-        } else {
-            std::cout << "Index out of range.\n";
-        }
+        } else std::cout << "Index out of range.\n";
         return;
     }
 

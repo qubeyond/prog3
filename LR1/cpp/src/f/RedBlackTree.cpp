@@ -1,8 +1,6 @@
 #include "f/RedBlackTree.hpp"
 #include <iostream>
 #include <fstream>
-#include <queue>
-#include <functional>
 
 static void leftRotate(RBTree &tree, RBNode* x);
 static void rightRotate(RBTree &tree, RBNode* y);
@@ -14,9 +12,6 @@ void initTree(RBTree &tree) {
     tree.root = nullptr;
 }
 
-// -----------------------
-// Вставка
-// -----------------------
 void insert(RBTree &tree, int val) {
     RBNode* z = new RBNode{val, RED, nullptr, nullptr, nullptr};
     RBNode* y = nullptr;
@@ -33,9 +28,6 @@ void insert(RBTree &tree, int val) {
     insertFixup(tree, z);
 }
 
-// -----------------------
-// Поиск
-// -----------------------
 RBNode* find(RBTree &tree, int val) {
     RBNode* cur = tree.root;
     while (cur != nullptr) {
@@ -46,16 +38,12 @@ RBNode* find(RBTree &tree, int val) {
     return nullptr;
 }
 
-// -----------------------
-// Удаление
-// -----------------------
 bool remove(RBTree &tree, int val) {
     RBNode* z = find(tree, val);
     if (!z) return false;
-    // Для краткости, используем базовую BST delete с балансировкой
     RBNode* y = z;
     Color yOriginalColor = y->color;
-    RBNode* x;
+    RBNode* x = nullptr;
     if (!z->left) {
         x = z->right;
         transplant(tree, z, z->right);
@@ -84,37 +72,30 @@ bool remove(RBTree &tree, int val) {
     return true;
 }
 
-// -----------------------
-// Печать inorder
-// -----------------------
+static void inorderRec(RBNode* node) {
+    if (!node) return;
+    inorderRec(node->left);
+    std::cout << node->value << " ";
+    inorderRec(node->right);
+}
+
 void inorderPrint(RBTree &tree) {
-    std::function<void(RBNode*)> dfs = [&](RBNode* node) {
-        if (!node) return;
-        dfs(node->left);
-        std::cout << node->value << " ";
-        dfs(node->right);
-    };
-    dfs(tree.root);
+    inorderRec(tree.root);
     std::cout << std::endl;
 }
 
-// -----------------------
-// Очистка дерева
-// -----------------------
+static void clearRec(RBNode* node) {
+    if (!node) return;
+    clearRec(node->left);
+    clearRec(node->right);
+    delete node;
+}
+
 void clearTree(RBTree &tree) {
-    std::function<void(RBNode*)> dfsDelete = [&](RBNode* node) {
-        if (!node) return;
-        dfsDelete(node->left);
-        dfsDelete(node->right);
-        delete node;
-    };
-    dfsDelete(tree.root);
+    clearRec(tree.root);
     tree.root = nullptr;
 }
 
-// -----------------------
-// Работа с файлами
-// -----------------------
 void readFromFile(RBTree &tree, const std::string &filename) {
     std::ifstream in(filename);
     if (!in.is_open()) return;
@@ -123,21 +104,19 @@ void readFromFile(RBTree &tree, const std::string &filename) {
     in.close();
 }
 
+static void writeRec(RBNode* node, std::ofstream &out) {
+    if (!node) return;
+    writeRec(node->left, out);
+    out << node->value << " ";
+    writeRec(node->right, out);
+}
+
 void writeToFile(RBTree &tree, const std::string &filename) {
     std::ofstream out(filename);
-    std::function<void(RBNode*)> dfs = [&](RBNode* node) {
-        if (!node) return;
-        dfs(node->left);
-        out << node->value << " ";
-        dfs(node->right);
-    };
-    dfs(tree.root);
+    writeRec(tree.root, out);
     out.close();
 }
 
-// -----------------------
-// Вспомогательные функции RBTree
-// -----------------------
 static void leftRotate(RBTree &tree, RBNode* x) {
     RBNode* y = x->right;
     x->right = y->left;
@@ -192,7 +171,7 @@ static void insertFixup(RBTree &tree, RBNode* z) {
             }
         }
     }
-    tree.root->color = BLACK;
+    if (tree.root) tree.root->color = BLACK;
 }
 
 static void transplant(RBTree &tree, RBNode* u, RBNode* v) {

@@ -2,7 +2,7 @@
 #include <string>
 
 struct DNode {
-    int value;
+    std::string value;
     DNode* prev;
     DNode* next;
 };
@@ -12,44 +12,23 @@ struct DLinkedList {
     DNode* tail;
 };
 
-// =======================
-// Инициализация
-// =======================
 void initDList(DLinkedList &list);
 
-// =======================
-// Добавление элементов
-// =======================
-void addHead(DLinkedList &list, int val);
-void addTail(DLinkedList &list, int val);
-bool addBefore(DLinkedList &list, int target, int val);
-bool addAfter(DLinkedList &list, int target, int val);
+void addHead(DLinkedList &list, const std::string &val);
+void addTail(DLinkedList &list, const std::string &val);
+bool addBefore(DLinkedList &list, const std::string &target, const std::string &val);
+bool addAfter(DLinkedList &list, const std::string &target, const std::string &val);
 
-// =======================
-// Удаление элементов
-// =======================
 bool removeHead(DLinkedList &list);
 bool removeTail(DLinkedList &list);
-bool removeValue(DLinkedList &list, int val);
+bool removeValue(DLinkedList &list, const std::string &val);
 
-// =======================
-// Поиск и чтение
-// =======================
 DNode* getNode(DLinkedList &list, int index);
-DNode* findValue(DLinkedList &list, int val);
+DNode* findValue(DLinkedList &list, const std::string &val);
 
-// =======================
-// Вывод
-// =======================
 void printList(DLinkedList &list);
 
-// =======================
-// Работа с файлами
-// =======================
 void readFromFile(DLinkedList &list, const std::string &filename);
 void writeToFile(DLinkedList &list, const std::string &filename);
 
-// =======================
-// Очистка списка
-// =======================
 void clearList(DLinkedList &list);

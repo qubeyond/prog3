@@ -1,18 +1,26 @@
+#include "e/Queue.hpp"
 #include <iostream>
 #include <sstream>
-#include "e/Queue.hpp"
 
 const std::string DATA_FILE = "queue.txt";
-Queue queue;
+static Queue queueInstance;
 
 void loadQueue() {
-    clearQueue(queue);
-    initQueue(queue);
-    readFromFile(queue, DATA_FILE);
+    clearQueue(queueInstance);
+    initQueue(queueInstance);
+    readFromFile(queueInstance, DATA_FILE);
 }
 
 void saveQueue() {
-    writeToFile(queue, DATA_FILE);
+    writeToFile(queueInstance, DATA_FILE);
+}
+
+void printQueue(Queue &q) {
+    for (int i = 0; i < q.size; ++i) {
+        std::cout << q.data[(q.front + i) % q.capacity];
+        if (i + 1 < q.size) std::cout << " ";
+    }
+    std::cout << std::endl;
 }
 
 void processCommand(const std::string &line) {
@@ -20,17 +28,54 @@ void processCommand(const std::string &line) {
     std::string cmd;
     ss >> cmd;
 
-    if (cmd == "PUSH") { int val; ss >> val; push(queue, val); saveQueue(); std::cout << "Pushed " << val << "\n"; return; }
-    if (cmd == "POP") { int val; if (pop(queue, val)) { saveQueue(); std::cout << "Popped " << val << "\n"; } else std::cout << "Queue empty\n"; return; }
-    if (cmd == "PEEK") { int val = peek(queue); if (length(queue) > 0) std::cout << "Front = " << val << "\n"; else std::cout << "Queue empty\n"; return; }
-    if (cmd == "LENGTH") { std::cout << "Length = " << length(queue) << "\n"; return; }
-    if (cmd == "CLEAR") { clearQueue(queue); initQueue(queue); saveQueue(); std::cout << "Queue cleared\n"; return; }
+    if (cmd == "PUSH") {
+        std::string val; ss >> val;
+        push(queueInstance, val);
+        saveQueue();
+        std::cout << "Pushed " << val << "\n";
+        return;
+    }
+
+    if (cmd == "POP") {
+        std::string val;
+        if (pop(queueInstance, val)) {
+            saveQueue();
+            std::cout << "Popped " << val << "\n";
+        } else {
+            std::cout << "Queue empty\n";
+        }
+        return;
+    }
+
+    if (cmd == "PEEK") {
+        if (length(queueInstance) > 0) std::cout << "Front = " << peek(queueInstance) << "\n";
+        else std::cout << "Queue empty\n";
+        return;
+    }
+
+    if (cmd == "LENGTH") {
+        std::cout << "Length = " << length(queueInstance) << "\n";
+        return;
+    }
+
+    if (cmd == "CLEAR") {
+        clearQueue(queueInstance);
+        initQueue(queueInstance);
+        saveQueue();
+        std::cout << "Queue cleared\n";
+        return;
+    }
+
+    if (cmd == "PRINT") {
+        printQueue(queueInstance);
+        return;
+    }
 
     std::cout << "Unknown command: " << cmd << "\n";
 }
 
 int main() {
-    initQueue(queue);
+    initQueue(queueInstance);
     loadQueue();
 
     std::cout << "Queue CLI. Commands:\n"
@@ -38,6 +83,7 @@ int main() {
               << "  POP          - dequeue\n"
               << "  PEEK         - show front\n"
               << "  LENGTH       - show length\n"
+              << "  PRINT        - print queue (front..back)\n"
               << "  CLEAR        - clear queue\n"
               << "  EXIT         - quit\n";
 
@@ -49,6 +95,6 @@ int main() {
         if (!line.empty()) processCommand(line);
     }
 
-    clearQueue(queue);
+    clearQueue(queueInstance);
     return 0;
 }

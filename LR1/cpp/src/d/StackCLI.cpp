@@ -1,19 +1,27 @@
+#include "d/Stack.hpp"
 #include <iostream>
 #include <sstream>
-#include "d/Stack.hpp"
 
 const std::string DATA_FILE = "stack.txt";
 
-Stack stack;
+static Stack stackInstance;
 
 void loadStack() {
-    clearStack(stack);
-    initStack(stack);
-    readFromFile(stack, DATA_FILE);
+    clearStack(stackInstance);
+    initStack(stackInstance);
+    readFromFile(stackInstance, DATA_FILE);
 }
 
 void saveStack() {
-    writeToFile(stack, DATA_FILE);
+    writeToFile(stackInstance, DATA_FILE);
+}
+
+void printStack(Stack &s) {
+    for (int i = 0; i < s.size; ++i) {
+        std::cout << s.data[i];
+        if (i + 1 < s.size) std::cout << " ";
+    }
+    std::cout << std::endl;
 }
 
 void processCommand(const std::string &line) {
@@ -21,17 +29,54 @@ void processCommand(const std::string &line) {
     std::string cmd;
     ss >> cmd;
 
-    if (cmd == "PUSH") { int val; ss >> val; push(stack, val); saveStack(); std::cout << "Pushed " << val << "\n"; return; }
-    if (cmd == "POP") { int val; if (pop(stack, val)) { saveStack(); std::cout << "Popped " << val << "\n"; } else { std::cout << "Stack empty\n"; } return; }
-    if (cmd == "TOP") { int val = top(stack); if (stack.size > 0) std::cout << "Top = " << val << "\n"; else std::cout << "Stack empty\n"; return; }
-    if (cmd == "LENGTH") { std::cout << "Length = " << length(stack) << "\n"; return; }
-    if (cmd == "CLEAR") { clearStack(stack); initStack(stack); saveStack(); std::cout << "Stack cleared\n"; return; }
+    if (cmd == "PUSH") {
+        std::string val; ss >> val;
+        push(stackInstance, val);
+        saveStack();
+        std::cout << "Pushed " << val << "\n";
+        return;
+    }
+
+    if (cmd == "POP") {
+        std::string val;
+        if (pop(stackInstance, val)) {
+            saveStack();
+            std::cout << "Popped " << val << "\n";
+        } else {
+            std::cout << "Stack empty\n";
+        }
+        return;
+    }
+
+    if (cmd == "TOP") {
+        if (length(stackInstance) > 0) std::cout << "Top = " << top(stackInstance) << "\n";
+        else std::cout << "Stack empty\n";
+        return;
+    }
+
+    if (cmd == "LENGTH") {
+        std::cout << "Length = " << length(stackInstance) << "\n";
+        return;
+    }
+
+    if (cmd == "CLEAR") {
+        clearStack(stackInstance);
+        initStack(stackInstance);
+        saveStack();
+        std::cout << "Stack cleared\n";
+        return;
+    }
+
+    if (cmd == "PRINT") {
+        printStack(stackInstance);
+        return;
+    }
 
     std::cout << "Unknown command: " << cmd << "\n";
 }
 
 int main() {
-    initStack(stack);
+    initStack(stackInstance);
     loadStack();
 
     std::cout << "Stack CLI. Commands:\n"
@@ -39,6 +84,7 @@ int main() {
               << "  POP          - pop value\n"
               << "  TOP          - show top\n"
               << "  LENGTH       - show length\n"
+              << "  PRINT        - print stack (bottom..top)\n"
               << "  CLEAR        - clear stack\n"
               << "  EXIT         - quit\n";
 
@@ -50,6 +96,6 @@ int main() {
         if (!line.empty()) processCommand(line);
     }
 
-    clearStack(stack);
+    clearStack(stackInstance);
     return 0;
 }
