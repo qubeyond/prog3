@@ -43,7 +43,13 @@ void processCommand(const std::string &line) {
     }
 
     if (cmd == "PRINT") {
-        inorderPrint(tree);
+        std::cout << "Tree structure (R:red, B:black):\n";
+        printTree(tree); // визуально
+        return;
+    }
+
+    if (cmd == "INORDER") {
+        inorderPrint(tree); // сортированный вывод
         return;
     }
 
@@ -62,12 +68,13 @@ int main() {
     loadTree();
 
     std::cout << "Red-Black Tree CLI. Commands:\n"
-              << "  INSERT <val> - add element\n"
-              << "  REMOVE <val> - remove element\n"
-              << "  FIND <val>   - search element\n"
-              << "  PRINT        - inorder print\n"
-              << "  CLEAR        - clear tree\n"
-              << "  EXIT         - quit\n";
+              << "  INSERT <val>  - add element\n"
+              << "  REMOVE <val>  - remove element\n"
+              << "  FIND <val>    - search element\n"
+              << "  PRINT         - show tree structure\n"
+              << "  INORDER       - show sorted values\n"
+              << "  CLEAR         - clear tree\n"
+              << "  EXIT          - quit\n";
 
     std::string line;
     while (true) {

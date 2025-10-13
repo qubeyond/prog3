@@ -177,6 +177,21 @@ void testClearList() {
     assert(list.head == nullptr);
 }
 
+void testRemoveBeforeAfter() {
+    LinkedList list;
+    initList(list);
+    addTail(list, "A");
+    addTail(list, "B");
+    addTail(list, "C");
+    addTail(list, "D");
+    assert(removeBefore(list, "C")); // удаляем B
+    assert(list.head->next->value == "C");
+    assert(removeAfter(list, "C"));  // удаляем D
+    assert(list.head->next->next == nullptr);
+    assert(!removeBefore(list, "A"));
+    clearList(list);
+}
+
 void testStress() {
     LinkedList list;
     initList(list);
@@ -236,6 +251,8 @@ int main() {
     runTest("testFileIO", testFileIO);
     runTest("testClearList", testClearList);
     runTest("testStress", testStress);
+    runTest("testRemoveBeforeAfter", testRemoveBeforeAfter);
+    
     std::cout << std::endl;
     if (fails == 0) std::cout << GREEN << "All " << total << " tests passed" << RESET << std::endl;
     else std::cout << RED << fails << " of " << total << " tests failed" << RESET << std::endl;

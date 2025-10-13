@@ -20,6 +20,8 @@ bool addAfter(LinkedList &list, const std::string &target, const std::string &va
 bool removeHead(LinkedList &list);
 bool removeTail(LinkedList &list);
 bool removeValue(LinkedList &list, const std::string &val);
+bool removeBefore(LinkedList &list, const std::string &target);
+bool removeAfter(LinkedList &list, const std::string &target);
 
 Node* getNode(LinkedList &list, int index);
 Node* findValue(LinkedList &list, const std::string &val);

@@ -84,6 +84,18 @@ void inorderPrint(RBTree &tree) {
     std::cout << std::endl;
 }
 
+static void printRec(RBNode* node, int indent = 0) {
+    if (!node) return;
+    printRec(node->right, indent + 4);
+    std::cout << std::string(indent, ' ');
+    std::cout << (node->color == RED ? "R:" : "B:") << node->value << "\n";
+    printRec(node->left, indent + 4);
+}
+
+void printTree(RBTree &tree) {
+    printRec(tree.root);
+}
+
 static void clearRec(RBNode* node) {
     if (!node) return;
     clearRec(node->left);

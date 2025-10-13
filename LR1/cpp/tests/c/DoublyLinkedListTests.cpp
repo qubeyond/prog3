@@ -28,10 +28,8 @@ void testAddBeforeAfter() {
     initDList(list);
     addHead(list, "10");
     addTail(list, "30");
-    bool added = addBefore(list, "30", "20");
-    assert(added && list.head->next->value == "20");
-    added = addAfter(list, "10", "5");
-    assert(added && list.head->next->value == "5");
+    assert(addBefore(list, "30", "20") && list.head->next->value == "20");
+    assert(addAfter(list, "10", "5") && list.head->next->value == "5");
     assert(!addBefore(list, "999", "0"));
     assert(!addAfter(list, "999", "0"));
     clearList(list);
@@ -40,46 +38,35 @@ void testAddBeforeAfter() {
 void testRemove() {
     DLinkedList list;
     initDList(list);
-    addHead(list, "10");
-    addTail(list, "20");
-    addTail(list, "30");
-    assert(removeHead(list));
-    assert(list.head->value == "20");
-    assert(removeTail(list));
-    assert(list.tail->value == "20");
+    addHead(list, "10"); addTail(list, "20"); addTail(list, "30");
+    assert(removeHead(list) && list.head->value == "20");
+    assert(removeTail(list) && list.tail->value == "20");
     addTail(list, "30");
     assert(removeValue(list, "30"));
     assert(!removeValue(list, "999"));
+    addHead(list, "10"); addTail(list, "20"); addTail(list, "30");
+    assert(removeBefore(list, "20"));  // удаляет "10"
+    assert(removeAfter(list, "20"));   // удаляет "30"
     clearList(list);
 }
 
 void testGetFind() {
     DLinkedList list;
     initDList(list);
-    addTail(list, "10");
-    addTail(list, "20");
-    addTail(list, "30");
-    DNode* n0 = getNode(list, 0);
-    DNode* n1 = getNode(list, 1);
-    DNode* n2 = getNode(list, 2);
-    DNode* n3 = getNode(list, 3);
-    assert(n0 && n0->value == "10");
-    assert(n1 && n1->value == "20");
-    assert(n2 && n2->value == "30");
-    assert(n3 == nullptr);
-    DNode* f1 = findValue(list, "20");
-    DNode* f2 = findValue(list, "999");
-    assert(f1 && f1->value == "20");
-    assert(f2 == nullptr);
+    addTail(list, "10"); addTail(list, "20"); addTail(list, "30");
+    assert(getNode(list, 0)->value == "10");
+    assert(getNode(list, 1)->value == "20");
+    assert(getNode(list, 2)->value == "30");
+    assert(getNode(list, 3) == nullptr);
+    assert(findValue(list, "20")->value == "20");
+    assert(findValue(list, "999") == nullptr);
     clearList(list);
 }
 
 void testPrint() {
     DLinkedList list;
     initDList(list);
-    addTail(list, "1");
-    addTail(list, "2");
-    addTail(list, "3");
+    addTail(list, "1"); addTail(list, "2"); addTail(list, "3");
     std::stringstream buffer;
     std::streambuf* old = std::cout.rdbuf(buffer.rdbuf());
     printList(list);
@@ -91,13 +78,12 @@ void testPrint() {
 void testFileIO() {
     DLinkedList list;
     initDList(list);
-    addTail(list, "100");
-    addTail(list, "200");
+    addTail(list, "100"); addTail(list, "200");
     writeToFile(list, "test_dlist.txt");
     clearList(list);
     readFromFile(list, "test_dlist.txt");
-    assert(list.head && list.head->value == "100");
-    assert(list.tail && list.tail->value == "200");
+    assert(list.head->value == "100");
+    assert(list.tail->value == "200");
     clearList(list);
     std::remove("test_dlist.txt");
 }
@@ -105,9 +91,7 @@ void testFileIO() {
 void testClear() {
     DLinkedList list;
     initDList(list);
-    addTail(list, "1");
-    addTail(list, "2");
-    addTail(list, "3");
+    addTail(list, "1"); addTail(list, "2"); addTail(list, "3");
     clearList(list);
     assert(list.head == nullptr && list.tail == nullptr);
 }
@@ -128,14 +112,8 @@ int total = 0;
 
 void runTest(const std::string &name, void(*func)()) {
     ++total;
-    try {
-        func();
-        std::cout << GREEN << "." << RESET;
-    } catch (...) {
-        ++fails;
-        std::cout << RED << "F" << RESET;
-        std::cerr << "\nTest failed: " << name << std::endl;
-    }
+    try { func(); std::cout << GREEN << "." << RESET; }
+    catch (...) { ++fails; std::cout << RED << "F" << RESET; std::cerr << "\nTest failed: " << name << std::endl; }
 }
 
 int main() {
@@ -148,8 +126,10 @@ int main() {
     runTest("testFileIO", testFileIO);
     runTest("testClear", testClear);
     runTest("testStress", testStress);
+
     std::cout << std::endl;
     if (fails == 0) std::cout << GREEN << "All " << total << " tests passed" << RESET << std::endl;
     else std::cout << RED << fails << " of " << total << " tests failed" << RESET << std::endl;
+
     return fails ? 1 : 0;
 }

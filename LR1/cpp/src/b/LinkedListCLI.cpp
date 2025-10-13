@@ -100,6 +100,28 @@ void processCommand(LinkedList &list, const std::string &commandLine) {
         return;
     }
 
+    if (cmd == "LREMBEFORE") {
+        std::string target; ss >> target;
+        if (removeBefore(list, target)) {
+            saveList(list);
+            std::cout << "Removed node before " << target << ".\n";
+        } else {
+            std::cout << "Nothing to remove before " << target << ".\n";
+        }
+        return;
+    }
+
+    if (cmd == "LREMAFTER") {
+        std::string target; ss >> target;
+        if (removeAfter(list, target)) {
+            saveList(list);
+            std::cout << "Removed node after " << target << ".\n";
+        } else {
+            std::cout << "Nothing to remove after " << target << ".\n";
+        }
+        return;
+    }
+
     if (cmd == "LGET") {
         int idx; ss >> idx;
         Node* n = getNode(list, idx);
@@ -132,6 +154,8 @@ int main() {
               << "  LREMH                     - remove head\n"
               << "  LREMT                     - remove tail\n"
               << "  LREMV <val>               - remove by value\n"
+              << "  LREMBEFORE <target>       - remove node before target\n"
+              << "  LREMAFTER <target>        - remove node after target\n"
               << "  LGET <index>              - get node by index\n"
               << "  LFIND <val>               - find node by value\n"
               << "  LCLEAR                    - clear list\n"

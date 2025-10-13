@@ -78,6 +78,28 @@ bool removeValue(LinkedList &list, const std::string &val) {
     return true;
 }
 
+bool removeBefore(LinkedList &list, const std::string &target) {
+    if (!list.head || list.head->value == target) return false;
+    if (list.head->next && list.head->next->value == target) return removeHead(list);
+    Node* cur = list.head;
+    while (cur->next && cur->next->next && cur->next->next->value != target) cur = cur->next;
+    if (!cur->next || !cur->next->next) return false;
+    Node* tmp = cur->next;
+    cur->next = cur->next->next;
+    delete tmp;
+    return true;
+}
+
+bool removeAfter(LinkedList &list, const std::string &target) {
+    Node* cur = list.head;
+    while (cur && cur->value != target) cur = cur->next;
+    if (!cur || !cur->next) return false;
+    Node* tmp = cur->next;
+    cur->next = cur->next->next;
+    delete tmp;
+    return true;
+}
+
 Node* getNode(LinkedList &list, int index) {
     Node* cur = list.head;
     int i = 0;

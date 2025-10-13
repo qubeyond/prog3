@@ -22,6 +22,8 @@ bool addAfter(DLinkedList &list, const std::string &target, const std::string &v
 bool removeHead(DLinkedList &list);
 bool removeTail(DLinkedList &list);
 bool removeValue(DLinkedList &list, const std::string &val);
+bool removeBefore(DLinkedList &list, const std::string &target);
+bool removeAfter(DLinkedList &list, const std::string &target);
 
 DNode* getNode(DLinkedList &list, int index);
 DNode* findValue(DLinkedList &list, const std::string &val);

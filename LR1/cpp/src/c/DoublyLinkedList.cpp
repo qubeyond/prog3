@@ -69,6 +69,28 @@ bool removeValue(DLinkedList &list, const std::string &val) {
     return true;
 }
 
+bool removeBefore(DLinkedList &list, const std::string &target) {
+    DNode* cur = list.head;
+    while (cur && cur->value != target) cur = cur->next;
+    if (!cur || !cur->prev) return false;
+    DNode* toDelete = cur->prev;
+    if (toDelete->prev) toDelete->prev->next = cur; else list.head = cur;
+    cur->prev = toDelete->prev;
+    delete toDelete;
+    return true;
+}
+
+bool removeAfter(DLinkedList &list, const std::string &target) {
+    DNode* cur = list.head;
+    while (cur && cur->value != target) cur = cur->next;
+    if (!cur || !cur->next) return false;
+    DNode* toDelete = cur->next;
+    if (toDelete->next) toDelete->next->prev = cur; else list.tail = cur;
+    cur->next = toDelete->next;
+    delete toDelete;
+    return true;
+}
+
 DNode* getNode(DLinkedList &list, int index) {
     DNode* cur = list.head;
     for (int i = 0; cur && i < index; ++i) cur = cur->next;

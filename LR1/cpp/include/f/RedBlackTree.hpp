@@ -22,7 +22,8 @@ bool remove(RBTree &tree, int val);
 
 RBNode* find(RBTree &tree, int val);
 
-void inorderPrint(RBTree &tree);
+void printTree(RBTree &tree); 
+void inorderPrint(RBTree &tree); 
 
 void readFromFile(RBTree &tree, const std::string &filename);
 void writeToFile(RBTree &tree, const std::string &filename);
