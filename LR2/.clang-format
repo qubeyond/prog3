@@ -1,0 +1,14 @@
+BasedOnStyle: Google
+
+Language: Cpp
+
+AllowShortFunctionsOnASingleLine: None
+
+BraceWrapping:
+  AfterFunction: true
+
+BreakBeforeBraces: Custom
+
+IndentWidth: 4
+ColumnLimit: 100
+SortIncludes: true
