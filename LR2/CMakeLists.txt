@@ -25,6 +25,10 @@ target_link_libraries(task3.out PRIVATE lab_lib)
 add_executable(task4.out src/4/CLI.cpp)
 target_link_libraries(task4.out PRIVATE lab_lib)
 
+# Задание 5
+add_executable(task5.out src/5/CLI.cpp)
+target_link_libraries(task5.out PRIVATE lab_lib)
+
 # Задание 6
 add_executable(task6.out src/6/CLI.cpp)
 target_link_libraries(task6.out PRIVATE lab_lib)
