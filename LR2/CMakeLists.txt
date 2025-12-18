@@ -13,6 +13,10 @@ target_include_directories(lab_lib PUBLIC include)
 add_executable(task1.out src/1/CLI.cpp)
 target_link_libraries(task1.out PRIVATE lab_lib)
 
+# Задание 6
+add_executable(task6.out src/6/CLI.cpp)
+target_link_libraries(task6.out PRIVATE lab_lib)
+
 find_program(CLANG_FORMAT_EXE NAMES clang-format)
 if(CLANG_FORMAT_EXE)
     file(GLOB_RECURSE FORMAT_SOURCES "src/*.cpp" "include/*.hpp" "test/*.cpp")
