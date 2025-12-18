@@ -6,21 +6,14 @@ struct Stack {
     int size;
     int capacity;
 
-    ~Stack()
-    {
-        if (data != nullptr) {
-            delete[] data;
-        }
-    }
-
-    Stack() : data(nullptr), size(0), capacity(0)
-    {
-    }
+    Stack();
+    ~Stack();
+    Stack(const Stack&) = delete;
+    Stack& operator=(const Stack&) = delete;
 };
 
 void initStack(Stack &stk, int capacity = 100);
 void clearStack(Stack &s);
-
 bool push(Stack &s, const Token &val);
 bool pop(Stack &s, Token &val);
 const Token &top(const Stack &s);
