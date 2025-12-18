@@ -13,6 +13,10 @@ target_include_directories(lab_lib PUBLIC include)
 add_executable(task1.out src/1/CLI.cpp)
 target_link_libraries(task1.out PRIVATE lab_lib)
 
+# Задание 2
+add_executable(task2.out src/2/CLI.cpp)
+target_link_libraries(task2.out PRIVATE lab_lib)
+
 # Задание 6
 add_executable(task6.out src/6/CLI.cpp)
 target_link_libraries(task6.out PRIVATE lab_lib)
