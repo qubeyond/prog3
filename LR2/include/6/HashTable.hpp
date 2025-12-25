@@ -14,7 +14,6 @@ public:
 
     explicit HashTable(size_t cap = 100003);
     
-    // Rule of Five (Копирование запрещено для простоты и безопасности ресурсов)
     ~HashTable() = default;
     HashTable(const HashTable&) = delete;
     HashTable& operator=(const HashTable&) = delete;
@@ -32,5 +31,5 @@ private:
     
     size_t capacity_;
     size_t size_ = 0;
-    std::unique_ptr<Entry[]> table_; // Умный указатель на массив
+    std::unique_ptr<Entry[]> table_;
 };
