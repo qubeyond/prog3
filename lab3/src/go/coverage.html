@@ -1,0 +1,1143 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>internal: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">lab3/internal/array.go (70.7%)</option>
+				
+				<option value="file1">lab3/internal/binary.go (94.8%)</option>
+				
+				<option value="file2">lab3/internal/cbtree.go (100.0%)</option>
+				
+				<option value="file3">lab3/internal/cli.go (1.6%)</option>
+				
+				<option value="file4">lab3/internal/doubly_list.go (89.9%)</option>
+				
+				<option value="file5">lab3/internal/hashtable.go (90.9%)</option>
+				
+				<option value="file6">lab3/internal/queue.go (100.0%)</option>
+				
+				<option value="file7">lab3/internal/singly_list.go (96.2%)</option>
+				
+				<option value="file8">lab3/internal/stack.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package internal
+
+import (
+        "errors"
+        "strings"
+)
+
+type Array struct {
+        data     []string
+        size     int
+        capacity int
+}
+
+func NewArray() *Array <span class="cov8" title="1">{
+        return &amp;Array{
+                data:     make([]string, 4),
+                size:     0,
+                capacity: 4,
+        }
+}</span>
+
+func (a *Array) resize(newCapacity int) <span class="cov0" title="0">{
+        newData := make([]string, newCapacity)
+        copy(newData, a.data[:a.size])
+        a.data = newData
+        a.capacity = newCapacity
+}</span>
+
+func (a *Array) Push(value string) <span class="cov8" title="1">{
+        if a.size &gt;= a.capacity </span><span class="cov0" title="0">{
+                a.resize(a.capacity * 2)
+        }</span>
+        <span class="cov8" title="1">a.data[a.size] = value
+        a.size++</span>
+}
+
+func (a *Array) Insert(index int, value string) error <span class="cov8" title="1">{
+        if index &lt; 0 || index &gt; a.size </span><span class="cov0" title="0">{
+                return errors.New("index out of bounds")
+        }</span>
+        <span class="cov8" title="1">if a.size &gt;= a.capacity </span><span class="cov0" title="0">{
+                a.resize(a.capacity * 2)
+        }</span>
+        <span class="cov8" title="1">copy(a.data[index+1:a.size+1], a.data[index:a.size])
+        a.data[index] = value
+        a.size++
+        return nil</span>
+}
+
+func (a *Array) Get(index int) (string, error) <span class="cov8" title="1">{
+        if index &lt; 0 || index &gt;= a.size </span><span class="cov8" title="1">{
+                return "", errors.New("index out of bounds")
+        }</span>
+        <span class="cov8" title="1">return a.data[index], nil</span>
+}
+
+func (a *Array) Set(index int, value string) error <span class="cov0" title="0">{
+        if index &lt; 0 || index &gt;= a.size </span><span class="cov0" title="0">{
+                return errors.New("index out of bounds")
+        }</span>
+        <span class="cov0" title="0">a.data[index] = value
+        return nil</span>
+}
+
+func (a *Array) Remove(index int) bool <span class="cov8" title="1">{
+        if index &lt; 0 || index &gt;= a.size </span><span class="cov0" title="0">{
+                return false
+        }</span>
+        <span class="cov8" title="1">copy(a.data[index:a.size-1], a.data[index+1:a.size])
+        a.size--
+        return true</span>
+}
+
+func (a *Array) ToSlice() []string <span class="cov8" title="1">{
+        res := make([]string, a.size)
+        copy(res, a.data[:a.size])
+        return res
+}</span>
+
+func (a *Array) Print() string <span class="cov8" title="1">{
+        var sb strings.Builder
+        sb.WriteString("[")
+        for i := 0; i &lt; a.size; i++ </span><span class="cov8" title="1">{
+                sb.WriteString(a.data[i])
+                if i &lt; a.size-1 </span><span class="cov8" title="1">{
+                        sb.WriteString(", ")
+                }</span>
+        }
+        <span class="cov8" title="1">sb.WriteString("]")
+        return sb.String()</span>
+}
+
+func (a *Array) GetSize() int <span class="cov8" title="1">{ return a.size }</pre>
+		
+		<pre class="file" id="file1" style="display: none">package internal
+
+import (
+        "encoding/binary"
+        "fmt"
+        "io"
+        "os"
+)
+
+const (
+        ArrayType = iota
+        SinglyListType
+        DoublyListType
+        StackType
+        QueueType
+        CBTreeType
+        HashTableType
+)
+
+func WriteString(w io.Writer, s string) error <span class="cov8" title="1">{
+        err := binary.Write(w, binary.LittleEndian, int32(len(s)))
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">_, err = w.Write([]byte(s))
+        return err</span>
+}
+
+func ReadString(r io.Reader) (string, error) <span class="cov8" title="1">{
+        var length int32
+        if err := binary.Read(r, binary.LittleEndian, &amp;length); err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+        <span class="cov8" title="1">if length == 0 </span><span class="cov0" title="0">{
+                return "", nil
+        }</span>
+        <span class="cov8" title="1">buf := make([]byte, length)
+        if _, err := io.ReadFull(r, buf); err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+        <span class="cov8" title="1">return string(buf), nil</span>
+}
+
+func (dm *DataManager) SaveBinary(filename string) error <span class="cov8" title="1">{
+        file, err := os.Create(filename)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">defer file.Close()
+
+        file.Write([]byte("NSTU"))
+        binary.Write(file, binary.LittleEndian, int32(1))
+
+        total := int32(len(dm.Arrays) + len(dm.SinglyLists) + len(dm.DoublyLists) +
+                len(dm.Stacks) + len(dm.Queues) + len(dm.Trees) + len(dm.HashTables))
+        binary.Write(file, binary.LittleEndian, total)
+
+        for name, obj := range dm.Arrays </span><span class="cov8" title="1">{
+                WriteString(file, name)
+                binary.Write(file, binary.LittleEndian, int32(ArrayType))
+                data := obj.ToSlice()
+                binary.Write(file, binary.LittleEndian, int32(len(data)))
+                for _, v := range data </span><span class="cov8" title="1">{
+                        WriteString(file, v)
+                }</span>
+        }
+
+        <span class="cov8" title="1">for name, obj := range dm.SinglyLists </span><span class="cov8" title="1">{
+                WriteString(file, name)
+                binary.Write(file, binary.LittleEndian, int32(SinglyListType))
+                binary.Write(file, binary.LittleEndian, int32(obj.size))
+                curr := obj.head
+                for curr != nil </span><span class="cov8" title="1">{
+                        WriteString(file, curr.Data)
+                        curr = curr.Next
+                }</span>
+        }
+
+        <span class="cov8" title="1">for name, obj := range dm.DoublyLists </span><span class="cov8" title="1">{
+                WriteString(file, name)
+                binary.Write(file, binary.LittleEndian, int32(DoublyListType))
+                binary.Write(file, binary.LittleEndian, int32(obj.size))
+                curr := obj.head
+                for curr != nil </span><span class="cov8" title="1">{
+                        WriteString(file, curr.Data)
+                        curr = curr.Next
+                }</span>
+        }
+
+        <span class="cov8" title="1">for name, obj := range dm.Stacks </span><span class="cov8" title="1">{
+                WriteString(file, name)
+                binary.Write(file, binary.LittleEndian, int32(StackType))
+                var temp []string
+                curr := obj.list.head
+                for curr != nil </span><span class="cov8" title="1">{
+                        temp = append([]string{curr.Data}, temp...)
+                        curr = curr.Next
+                }</span>
+                <span class="cov8" title="1">binary.Write(file, binary.LittleEndian, int32(len(temp)))
+                for _, v := range temp </span><span class="cov8" title="1">{
+                        WriteString(file, v)
+                }</span>
+        }
+
+        <span class="cov8" title="1">for name, obj := range dm.Queues </span><span class="cov8" title="1">{
+                WriteString(file, name)
+                binary.Write(file, binary.LittleEndian, int32(QueueType))
+                binary.Write(file, binary.LittleEndian, int32(obj.list.size))
+                curr := obj.list.head
+                for curr != nil </span><span class="cov8" title="1">{
+                        WriteString(file, curr.Data)
+                        curr = curr.Next
+                }</span>
+        }
+
+        <span class="cov8" title="1">for name, obj := range dm.Trees </span><span class="cov8" title="1">{
+                WriteString(file, name)
+                binary.Write(file, binary.LittleEndian, int32(CBTreeType))
+                data := obj.ToSlice()
+                binary.Write(file, binary.LittleEndian, int32(len(data)))
+                for _, v := range data </span><span class="cov8" title="1">{
+                        WriteString(file, v)
+                }</span>
+        }
+
+        <span class="cov8" title="1">for name, obj := range dm.HashTables </span><span class="cov8" title="1">{
+                WriteString(file, name)
+                binary.Write(file, binary.LittleEndian, int32(HashTableType))
+                entries := obj.GetAll()
+                binary.Write(file, binary.LittleEndian, int32(len(entries)))
+                for _, entry := range entries </span><span class="cov8" title="1">{
+                        WriteString(file, entry.Key)
+                        WriteString(file, entry.Value)
+                }</span>
+        }
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (dm *DataManager) LoadBinary(filename string) error <span class="cov8" title="1">{
+        file, err := os.Open(filename)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">defer file.Close()
+
+        magic := make([]byte, 4)
+        if _, err := io.ReadFull(file, magic); err != nil || string(magic) != "NSTU" </span><span class="cov0" title="0">{
+                return fmt.Errorf("invalid format")
+        }</span>
+
+        <span class="cov8" title="1">var version int32
+        binary.Read(file, binary.LittleEndian, &amp;version)
+
+        var total int32
+        binary.Read(file, binary.LittleEndian, &amp;total)
+
+        for i := 0; i &lt; int(total); i++ </span><span class="cov8" title="1">{
+                name, _ := ReadString(file)
+                var typeID int32
+                binary.Read(file, binary.LittleEndian, &amp;typeID)
+
+                var size int32
+                binary.Read(file, binary.LittleEndian, &amp;size)
+
+                switch typeID </span>{
+                case ArrayType:<span class="cov8" title="1">
+                        arr := NewArray()
+                        for j := 0; j &lt; int(size); j++ </span><span class="cov8" title="1">{
+                                val, _ := ReadString(file)
+                                arr.Push(val)
+                        }</span>
+                        <span class="cov8" title="1">dm.Arrays[name] = arr</span>
+                case SinglyListType:<span class="cov8" title="1">
+                        list := NewSinglyList()
+                        for j := 0; j &lt; int(size); j++ </span><span class="cov8" title="1">{
+                                val, _ := ReadString(file)
+                                list.PushTail(val)
+                        }</span>
+                        <span class="cov8" title="1">dm.SinglyLists[name] = list</span>
+                case DoublyListType:<span class="cov8" title="1">
+                        list := NewDoublyList()
+                        for j := 0; j &lt; int(size); j++ </span><span class="cov8" title="1">{
+                                val, _ := ReadString(file)
+                                list.PushTail(val)
+                        }</span>
+                        <span class="cov8" title="1">dm.DoublyLists[name] = list</span>
+                case StackType:<span class="cov8" title="1">
+                        s := NewStack()
+                        for j := 0; j &lt; int(size); j++ </span><span class="cov8" title="1">{
+                                val, _ := ReadString(file)
+                                s.Push(val)
+                        }</span>
+                        <span class="cov8" title="1">dm.Stacks[name] = s</span>
+                case QueueType:<span class="cov8" title="1">
+                        q := NewQueue()
+                        for j := 0; j &lt; int(size); j++ </span><span class="cov8" title="1">{
+                                val, _ := ReadString(file)
+                                q.Push(val)
+                        }</span>
+                        <span class="cov8" title="1">dm.Queues[name] = q</span>
+                case CBTreeType:<span class="cov8" title="1">
+                        tree := NewCBT()
+                        for j := 0; j &lt; int(size); j++ </span><span class="cov8" title="1">{
+                                val, _ := ReadString(file)
+                                tree.Insert(val)
+                        }</span>
+                        <span class="cov8" title="1">dm.Trees[name] = tree</span>
+                case HashTableType:<span class="cov8" title="1">
+                        ht := NewHashTable(int(size) + 1)
+                        for j := 0; j &lt; int(size); j++ </span><span class="cov8" title="1">{
+                                key, _ := ReadString(file)
+                                val, _ := ReadString(file)
+                                ht.Insert(key, val)
+                        }</span>
+                        <span class="cov8" title="1">dm.HashTables[name] = ht</span>
+                }
+        }
+        <span class="cov8" title="1">return nil</span>
+}</pre>
+		
+		<pre class="file" id="file2" style="display: none">package internal
+
+import (
+        "strings"
+)
+
+type CBTNode struct {
+        Data  string
+        Left  *CBTNode
+        Right *CBTNode
+}
+
+type CompleteBinaryTree struct {
+        Root      *CBTNode
+        nodeCount int
+}
+
+func NewCBT() *CompleteBinaryTree <span class="cov8" title="1">{
+        return &amp;CompleteBinaryTree{}
+}</span>
+
+func (t *CompleteBinaryTree) Insert(value string) <span class="cov8" title="1">{
+        newNode := &amp;CBTNode{Data: value}
+        if t.Root == nil </span><span class="cov8" title="1">{
+                t.Root = newNode
+                t.nodeCount = 1
+                return
+        }</span>
+
+        <span class="cov8" title="1">queue := []*CBTNode{t.Root}
+        for len(queue) &gt; 0 </span><span class="cov8" title="1">{
+                temp := queue[0]
+                queue = queue[1:]
+
+                if temp.Left == nil </span><span class="cov8" title="1">{
+                        temp.Left = newNode
+                        break</span>
+                } else<span class="cov8" title="1"> {
+                        queue = append(queue, temp.Left)
+                }</span>
+
+                <span class="cov8" title="1">if temp.Right == nil </span><span class="cov8" title="1">{
+                        temp.Right = newNode
+                        break</span>
+                } else<span class="cov8" title="1"> {
+                        queue = append(queue, temp.Right)
+                }</span>
+        }
+        <span class="cov8" title="1">t.nodeCount++</span>
+}
+
+func (t *CompleteBinaryTree) Search(value string) bool <span class="cov8" title="1">{
+        if t.Root == nil </span><span class="cov8" title="1">{
+                return false
+        }</span>
+        <span class="cov8" title="1">queue := []*CBTNode{t.Root}
+        for len(queue) &gt; 0 </span><span class="cov8" title="1">{
+                temp := queue[0]
+                queue = queue[1:]
+
+                if temp.Data == value </span><span class="cov8" title="1">{
+                        return true
+                }</span>
+                <span class="cov8" title="1">if temp.Left != nil </span><span class="cov8" title="1">{
+                        queue = append(queue, temp.Left)
+                }</span>
+                <span class="cov8" title="1">if temp.Right != nil </span><span class="cov8" title="1">{
+                        queue = append(queue, temp.Right)
+                }</span>
+        }
+        <span class="cov8" title="1">return false</span>
+}
+
+func (t *CompleteBinaryTree) ToSlice() []string <span class="cov8" title="1">{
+        var res []string
+        if t.Root == nil </span><span class="cov8" title="1">{
+                return res
+        }</span>
+        <span class="cov8" title="1">queue := []*CBTNode{t.Root}
+        for len(queue) &gt; 0 </span><span class="cov8" title="1">{
+                temp := queue[0]
+                queue = queue[1:]
+                res = append(res, temp.Data)
+                if temp.Left != nil </span><span class="cov8" title="1">{
+                        queue = append(queue, temp.Left)
+                }</span>
+                <span class="cov8" title="1">if temp.Right != nil </span><span class="cov8" title="1">{
+                        queue = append(queue, temp.Right)
+                }</span>
+        }
+        <span class="cov8" title="1">return res</span>
+}
+
+func (t *CompleteBinaryTree) Print() string <span class="cov8" title="1">{
+        if t.Root == nil </span><span class="cov8" title="1">{
+                return "Empty Tree"
+        }</span>
+        <span class="cov8" title="1">var sb strings.Builder
+        t.printHelper(t.Root, "", false, &amp;sb)
+        return sb.String()</span>
+}
+
+func (t *CompleteBinaryTree) printHelper(node *CBTNode, prefix string, isLeft bool, sb *strings.Builder) <span class="cov8" title="1">{
+        if node == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">marker := "└── "
+        if isLeft </span><span class="cov8" title="1">{
+                marker = "├── "
+        }</span>
+        <span class="cov8" title="1">sb.WriteString(prefix + marker + node.Data + "\n")
+
+        newPrefix := prefix
+        if isLeft </span><span class="cov8" title="1">{
+                newPrefix += "│   "
+        }</span> else<span class="cov8" title="1"> {
+                newPrefix += "    "
+        }</span>
+
+        <span class="cov8" title="1">if node.Left != nil || node.Right != nil </span><span class="cov8" title="1">{
+                t.printHelper(node.Left, newPrefix, true, sb)
+                t.printHelper(node.Right, newPrefix, false, sb)
+        }</span>
+}
+
+func (t *CompleteBinaryTree) GetSize() int <span class="cov8" title="1">{
+        return t.nodeCount
+}</pre>
+		
+		<pre class="file" id="file3" style="display: none">package internal
+
+import (
+        "strconv"
+        "strings"
+)
+
+type DataManager struct {
+        Arrays      map[string]*Array
+        SinglyLists map[string]*SinglyList
+        DoublyLists map[string]*DoublyList
+        Stacks      map[string]*Stack
+        Queues      map[string]*Queue
+        Trees       map[string]*CompleteBinaryTree
+        HashTables  map[string]*HashTable
+}
+
+func NewDataManager() *DataManager <span class="cov8" title="1">{
+        return &amp;DataManager{
+                Arrays:      make(map[string]*Array),
+                SinglyLists: make(map[string]*SinglyList),
+                DoublyLists: make(map[string]*DoublyList),
+                Stacks:      make(map[string]*Stack),
+                Queues:      make(map[string]*Queue),
+                Trees:       make(map[string]*CompleteBinaryTree),
+                HashTables:  make(map[string]*HashTable),
+        }
+}</span>
+
+func (dm *DataManager) Execute(query string) string <span class="cov0" title="0">{
+        parts := strings.Fields(query)
+        if len(parts) &lt; 2 </span><span class="cov0" title="0">{
+                return "Error: Invalid command"
+        }</span>
+
+        <span class="cov0" title="0">cmd := parts[0]
+        name := parts[1]
+
+        switch </span>{
+        case strings.HasPrefix(cmd, "M"):<span class="cov0" title="0">
+                if _, ok := dm.Arrays[name]; !ok </span><span class="cov0" title="0">{ dm.Arrays[name] = NewArray() }</span>
+                <span class="cov0" title="0">arr := dm.Arrays[name]
+                if cmd == "MPUSH" &amp;&amp; len(parts) &gt; 2 </span><span class="cov0" title="0">{
+                        arr.Push(parts[2])
+                        return "OK"
+                }</span>
+                <span class="cov0" title="0">if cmd == "MGET" &amp;&amp; len(parts) &gt; 2 </span><span class="cov0" title="0">{
+                        idx, _ := strconv.Atoi(parts[2])
+                        val, err := arr.Get(idx)
+                        if err != nil </span><span class="cov0" title="0">{ return err.Error() }</span>
+                        <span class="cov0" title="0">return val</span>
+                }
+
+        case strings.HasPrefix(cmd, "S"):<span class="cov0" title="0">
+                if _, ok := dm.Stacks[name]; !ok </span><span class="cov0" title="0">{ dm.Stacks[name] = NewStack() }</span>
+                <span class="cov0" title="0">s := dm.Stacks[name]
+                if cmd == "SPUSH" &amp;&amp; len(parts) &gt; 2 </span><span class="cov0" title="0">{
+                        s.Push(parts[2])
+                        return "OK"
+                }</span>
+                <span class="cov0" title="0">if cmd == "SPOP" </span><span class="cov0" title="0">{ return s.Pop() }</span>
+
+        case strings.HasPrefix(cmd, "Q"):<span class="cov0" title="0">
+                if _, ok := dm.Queues[name]; !ok </span><span class="cov0" title="0">{ dm.Queues[name] = NewQueue() }</span>
+                <span class="cov0" title="0">q := dm.Queues[name]
+                if cmd == "QPUSH" &amp;&amp; len(parts) &gt; 2 </span><span class="cov0" title="0">{
+                        q.Push(parts[2])
+                        return "OK"
+                }</span>
+                <span class="cov0" title="0">if cmd == "QPOP" </span><span class="cov0" title="0">{ return q.Pop() }</span>
+
+        case strings.HasPrefix(cmd, "H"):<span class="cov0" title="0">
+                if _, ok := dm.HashTables[name]; !ok </span><span class="cov0" title="0">{ dm.HashTables[name] = NewHashTable(16) }</span>
+                <span class="cov0" title="0">ht := dm.HashTables[name]
+                if cmd == "HSET" &amp;&amp; len(parts) &gt; 3 </span><span class="cov0" title="0">{
+                        ht.Insert(parts[2], parts[3])
+                        return "OK"
+                }</span>
+                <span class="cov0" title="0">if cmd == "HGET" &amp;&amp; len(parts) &gt; 2 </span><span class="cov0" title="0">{
+                        val, ok := ht.Get(parts[2])
+                        if !ok </span><span class="cov0" title="0">{ return "Not found" }</span>
+                        <span class="cov0" title="0">return val</span>
+                }
+
+        case cmd == "PRINT":<span class="cov0" title="0">
+                if v, ok := dm.Arrays[name]; ok </span><span class="cov0" title="0">{ return v.Print() }</span>
+                <span class="cov0" title="0">if v, ok := dm.HashTables[name]; ok </span><span class="cov0" title="0">{ return v.Print() }</span>
+                <span class="cov0" title="0">if v, ok := dm.Stacks[name]; ok </span><span class="cov0" title="0">{ return v.Print() }</span>
+                <span class="cov0" title="0">if v, ok := dm.Queues[name]; ok </span><span class="cov0" title="0">{ return v.Print() }</span>
+                <span class="cov0" title="0">if v, ok := dm.SinglyLists[name]; ok </span><span class="cov0" title="0">{ return v.Print() }</span>
+                <span class="cov0" title="0">if v, ok := dm.DoublyLists[name]; ok </span><span class="cov0" title="0">{ return v.Print() }</span>
+                <span class="cov0" title="0">if v, ok := dm.Trees[name]; ok </span><span class="cov0" title="0">{ return v.Print() }</span>
+        }
+
+        <span class="cov0" title="0">return "Error: Unknown command"</span>
+}</pre>
+		
+		<pre class="file" id="file4" style="display: none">package internal
+
+import (
+        "errors"
+        "strings"
+)
+
+type DNode struct {
+        Data string
+        Next *DNode
+        Prev *DNode
+}
+
+type DoublyList struct {
+        head *DNode
+        tail *DNode
+        size int
+}
+
+func NewDoublyList() *DoublyList <span class="cov8" title="1">{
+        return &amp;DoublyList{}
+}</span>
+
+func (l *DoublyList) PushHead(value string) <span class="cov8" title="1">{
+        newNode := &amp;DNode{Data: value}
+        if l.head == nil </span><span class="cov0" title="0">{
+                l.head = newNode
+                l.tail = newNode
+        }</span> else<span class="cov8" title="1"> {
+                newNode.Next = l.head
+                l.head.Prev = newNode
+                l.head = newNode
+        }</span>
+        <span class="cov8" title="1">l.size++</span>
+}
+
+func (l *DoublyList) PushTail(value string) <span class="cov8" title="1">{
+        newNode := &amp;DNode{Data: value}
+        if l.tail == nil </span><span class="cov8" title="1">{
+                l.head = newNode
+                l.tail = newNode
+        }</span> else<span class="cov8" title="1"> {
+                newNode.Prev = l.tail
+                l.tail.Next = newNode
+                l.tail = newNode
+        }</span>
+        <span class="cov8" title="1">l.size++</span>
+}
+
+func (l *DoublyList) DelHead() bool <span class="cov8" title="1">{
+        if l.head == nil </span><span class="cov8" title="1">{
+                return false
+        }</span>
+        <span class="cov8" title="1">l.head = l.head.Next
+        if l.head != nil </span><span class="cov8" title="1">{
+                l.head.Prev = nil
+        }</span> else<span class="cov0" title="0"> {
+                l.tail = nil
+        }</span>
+        <span class="cov8" title="1">l.size--
+        return true</span>
+}
+
+func (l *DoublyList) DelTail() bool <span class="cov8" title="1">{
+        if l.tail == nil </span><span class="cov8" title="1">{
+                return false
+        }</span>
+        <span class="cov8" title="1">l.tail = l.tail.Prev
+        if l.tail != nil </span><span class="cov8" title="1">{
+                l.tail.Next = nil
+        }</span> else<span class="cov8" title="1"> {
+                l.head = nil
+        }</span>
+        <span class="cov8" title="1">l.size--
+        return true</span>
+}
+
+func (l *DoublyList) Get(index int) string <span class="cov8" title="1">{
+        if index &lt; 0 || index &gt;= l.size </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">var curr *DNode
+        if index &gt; l.size/2 </span><span class="cov8" title="1">{
+                curr = l.tail
+                for i := l.size - 1; i &gt; index; i-- </span><span class="cov0" title="0">{
+                        curr = curr.Prev
+                }</span>
+        } else<span class="cov8" title="1"> {
+                curr = l.head
+                for i := 0; i &lt; index; i++ </span><span class="cov8" title="1">{
+                        curr = curr.Next
+                }</span>
+        }
+        <span class="cov8" title="1">return curr.Data</span>
+}
+
+func (l *DoublyList) Set(index int, value string) error <span class="cov8" title="1">{
+        if index &lt; 0 || index &gt;= l.size </span><span class="cov8" title="1">{
+                return errors.New("index out of bounds")
+        }</span>
+        <span class="cov8" title="1">var curr *DNode
+        if index &gt; l.size/2 </span><span class="cov0" title="0">{
+                curr = l.tail
+                for i := l.size - 1; i &gt; index; i-- </span><span class="cov0" title="0">{
+                        curr = curr.Prev
+                }</span>
+        } else<span class="cov8" title="1"> {
+                curr = l.head
+                for i := 0; i &lt; index; i++ </span><span class="cov8" title="1">{
+                        curr = curr.Next
+                }</span>
+        }
+        <span class="cov8" title="1">curr.Data = value
+        return nil</span>
+}
+
+func (l *DoublyList) Print() string <span class="cov8" title="1">{
+        if l.head == nil </span><span class="cov8" title="1">{
+                return "[]"
+        }</span>
+        <span class="cov8" title="1">var sb strings.Builder
+        sb.WriteString("[")
+        curr := l.head
+        for curr != nil </span><span class="cov8" title="1">{
+                sb.WriteString(curr.Data)
+                if curr.Next != nil </span><span class="cov8" title="1">{
+                        sb.WriteString(" &lt;-&gt; ")
+                }</span>
+                <span class="cov8" title="1">curr = curr.Next</span>
+        }
+        <span class="cov8" title="1">sb.WriteString("]")
+        return sb.String()</span>
+}
+
+func (l *DoublyList) GetSize() int <span class="cov8" title="1">{
+        return l.size
+}</pre>
+		
+		<pre class="file" id="file5" style="display: none">package internal
+
+import (
+        "fmt"
+        "strings"
+)
+
+type hashNode struct {
+        key   string
+        value string
+        next  *hashNode
+}
+
+type HashEntry struct {
+        Key   string
+        Value string
+}
+
+type HashTable struct {
+        buckets  []*hashNode
+        capacity int
+        count    int
+}
+
+const loadFactorThreshold = 0.75
+
+func NewHashTable(initialCapacity int) *HashTable <span class="cov8" title="1">{
+        if initialCapacity &lt;= 0 </span><span class="cov0" title="0">{
+                initialCapacity = 16
+        }</span>
+        <span class="cov8" title="1">return &amp;HashTable{
+                buckets:  make([]*hashNode, initialCapacity),
+                capacity: initialCapacity,
+                count:    0,
+        }</span>
+}
+
+func (ht *HashTable) hashFunction(key string) int <span class="cov8" title="1">{
+        hash := 0
+        for i := 0; i &lt; len(key); i++ </span><span class="cov8" title="1">{
+                hash = 31*hash + int(key[i])
+        }</span>
+        <span class="cov8" title="1">return (hash &amp; 0x7FFFFFFF) % ht.capacity</span>
+}
+
+func (ht *HashTable) Insert(key, value string) <span class="cov8" title="1">{
+        index := ht.hashFunction(key)
+        curr := ht.buckets[index]
+
+        for curr != nil </span><span class="cov8" title="1">{
+                if curr.key == key </span><span class="cov8" title="1">{
+                        curr.value = value
+                        return
+                }</span>
+                <span class="cov0" title="0">curr = curr.next</span>
+        }
+
+        <span class="cov8" title="1">newNode := &amp;hashNode{key: key, value: value, next: ht.buckets[index]}
+        ht.buckets[index] = newNode
+        ht.count++
+
+        if float64(ht.count)/float64(ht.capacity) &gt; loadFactorThreshold </span><span class="cov8" title="1">{
+                ht.resize()
+        }</span>
+}
+
+func (ht *HashTable) resize() <span class="cov8" title="1">{
+        oldBuckets := ht.buckets
+        ht.capacity *= 2
+        ht.buckets = make([]*hashNode, ht.capacity)
+        ht.count = 0
+
+        for _, node := range oldBuckets </span><span class="cov8" title="1">{
+                for node != nil </span><span class="cov8" title="1">{
+                        ht.Insert(node.key, node.value)
+                        node = node.next
+                }</span>
+        }
+}
+
+func (ht *HashTable) Get(key string) (string, bool) <span class="cov8" title="1">{
+        index := ht.hashFunction(key)
+        curr := ht.buckets[index]
+        for curr != nil </span><span class="cov8" title="1">{
+                if curr.key == key </span><span class="cov8" title="1">{
+                        return curr.value, true
+                }</span>
+                <span class="cov8" title="1">curr = curr.next</span>
+        }
+        <span class="cov8" title="1">return "", false</span>
+}
+
+func (ht *HashTable) Remove(key string) bool <span class="cov8" title="1">{
+        index := ht.hashFunction(key)
+        curr := ht.buckets[index]
+        var prev *hashNode
+
+        for curr != nil </span><span class="cov8" title="1">{
+                if curr.key == key </span><span class="cov8" title="1">{
+                        if prev != nil </span><span class="cov0" title="0">{
+                                prev.next = curr.next
+                        }</span> else<span class="cov8" title="1"> {
+                                ht.buckets[index] = curr.next
+                        }</span>
+                        <span class="cov8" title="1">ht.count--
+                        return true</span>
+                }
+                <span class="cov0" title="0">prev = curr
+                curr = curr.next</span>
+        }
+        <span class="cov8" title="1">return false</span>
+}
+
+func (ht *HashTable) GetAll() []HashEntry <span class="cov8" title="1">{
+        entries := make([]HashEntry, 0, ht.count)
+        for _, node := range ht.buckets </span><span class="cov8" title="1">{
+                for node != nil </span><span class="cov8" title="1">{
+                        entries = append(entries, HashEntry{Key: node.key, Value: node.value})
+                        node = node.next
+                }</span>
+        }
+        <span class="cov8" title="1">return entries</span>
+}
+
+func (ht *HashTable) Print() string <span class="cov8" title="1">{
+        var sb strings.Builder
+        sb.WriteString("{")
+        first := true
+        for _, node := range ht.buckets </span><span class="cov8" title="1">{
+                for node != nil </span><span class="cov8" title="1">{
+                        if !first </span><span class="cov0" title="0">{
+                                sb.WriteString(", ")
+                        }</span>
+                        <span class="cov8" title="1">fmt.Fprintf(&amp;sb, "%s: %s", node.key, node.value)
+                        first = false
+                        node = node.next</span>
+                }
+        }
+        <span class="cov8" title="1">sb.WriteString("}")
+        return sb.String()</span>
+}
+
+func (ht *HashTable) GetCount() int <span class="cov8" title="1">{
+        return ht.count
+}</pre>
+		
+		<pre class="file" id="file6" style="display: none">package internal
+
+type Queue struct {
+        list *SinglyList
+}
+
+func NewQueue() *Queue <span class="cov8" title="1">{
+        return &amp;Queue{
+                list: NewSinglyList(),
+        }
+}</span>
+
+func (q *Queue) Push(value string) <span class="cov8" title="1">{
+        q.list.PushTail(value)
+}</span>
+
+func (q *Queue) Pop() string <span class="cov8" title="1">{
+        if q.list.GetSize() == 0 </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">val := q.list.head.Data
+        q.list.DelHead()
+        return val</span>
+}
+
+func (q *Queue) Front() string <span class="cov8" title="1">{
+        if q.list.GetSize() == 0 </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">return q.list.head.Data</span>
+}
+
+func (q *Queue) Size() int <span class="cov8" title="1">{
+        return q.list.GetSize()
+}</span>
+
+func (q *Queue) Empty() bool <span class="cov8" title="1">{
+        return q.list.GetSize() == 0
+}</span>
+
+func (q *Queue) Print() string <span class="cov8" title="1">{
+        if q.Empty() </span><span class="cov8" title="1">{
+                return "[] (front-&gt;back)"
+        }</span>
+        <span class="cov8" title="1">return q.list.Print() + " (front-&gt;back)"</span>
+}</pre>
+		
+		<pre class="file" id="file7" style="display: none">package internal
+
+import (
+        "strings"
+)
+
+type SNode struct {
+        Data string
+        Next *SNode
+}
+
+type SinglyList struct {
+        head *SNode
+        tail *SNode
+        size int
+}
+
+func NewSinglyList() *SinglyList <span class="cov8" title="1">{
+        return &amp;SinglyList{}
+}</span>
+
+func (l *SinglyList) PushHead(value string) <span class="cov8" title="1">{
+        newNode := &amp;SNode{Data: value}
+        if l.head == nil </span><span class="cov8" title="1">{
+                l.head = newNode
+                l.tail = newNode
+        }</span> else<span class="cov8" title="1"> {
+                newNode.Next = l.head
+                l.head = newNode
+        }</span>
+        <span class="cov8" title="1">l.size++</span>
+}
+
+func (l *SinglyList) PushTail(value string) <span class="cov8" title="1">{
+        newNode := &amp;SNode{Data: value}
+        if l.tail == nil </span><span class="cov8" title="1">{
+                l.head = newNode
+                l.tail = newNode
+        }</span> else<span class="cov8" title="1"> {
+                l.tail.Next = newNode
+                l.tail = newNode
+        }</span>
+        <span class="cov8" title="1">l.size++</span>
+}
+
+func (l *SinglyList) DelHead() bool <span class="cov8" title="1">{
+        if l.head == nil </span><span class="cov8" title="1">{
+                return false
+        }</span>
+        <span class="cov8" title="1">l.head = l.head.Next
+        if l.head == nil </span><span class="cov8" title="1">{
+                l.tail = nil
+        }</span>
+        <span class="cov8" title="1">l.size--
+        return true</span>
+}
+
+func (l *SinglyList) DelTail() bool <span class="cov8" title="1">{
+        if l.head == nil </span><span class="cov8" title="1">{
+                return false
+        }</span>
+        <span class="cov8" title="1">if l.head == l.tail </span><span class="cov0" title="0">{
+                return l.DelHead()
+        }</span>
+        <span class="cov8" title="1">curr := l.head
+        for curr.Next != l.tail </span><span class="cov0" title="0">{
+                curr = curr.Next
+        }</span>
+        <span class="cov8" title="1">l.tail = curr
+        l.tail.Next = nil
+        l.size--
+        return true</span>
+}
+
+func (l *SinglyList) Find(value string) bool <span class="cov8" title="1">{
+        curr := l.head
+        for curr != nil </span><span class="cov8" title="1">{
+                if curr.Data == value </span><span class="cov8" title="1">{
+                        return true
+                }</span>
+                <span class="cov8" title="1">curr = curr.Next</span>
+        }
+        <span class="cov8" title="1">return false</span>
+}
+
+func (l *SinglyList) Print() string <span class="cov8" title="1">{
+        if l.head == nil </span><span class="cov8" title="1">{
+                return "[]"
+        }</span>
+        <span class="cov8" title="1">var sb strings.Builder
+        sb.WriteString("[")
+        curr := l.head
+        for curr != nil </span><span class="cov8" title="1">{
+                sb.WriteString(curr.Data)
+                if curr.Next != nil </span><span class="cov8" title="1">{
+                        sb.WriteString(" -&gt; ")
+                }</span>
+                <span class="cov8" title="1">curr = curr.Next</span>
+        }
+        <span class="cov8" title="1">sb.WriteString("]")
+        return sb.String()</span>
+}
+
+func (l *SinglyList) GetSize() int <span class="cov8" title="1">{
+        return l.size
+}</pre>
+		
+		<pre class="file" id="file8" style="display: none">package internal
+
+type Stack struct {
+        list *SinglyList
+}
+
+func NewStack() *Stack <span class="cov8" title="1">{
+        return &amp;Stack{
+                list: NewSinglyList(),
+        }
+}</span>
+
+func (s *Stack) Push(value string) <span class="cov8" title="1">{
+        s.list.PushHead(value)
+}</span>
+
+func (s *Stack) Pop() string <span class="cov8" title="1">{
+        if s.list.GetSize() == 0 </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">val := s.list.head.Data
+        s.list.DelHead()
+        return val</span>
+}
+
+func (s *Stack) Top() string <span class="cov8" title="1">{
+        if s.list.GetSize() == 0 </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">return s.list.head.Data</span>
+}
+
+func (s *Stack) Size() int <span class="cov8" title="1">{
+        return s.list.GetSize()
+}</span>
+
+func (s *Stack) Empty() bool <span class="cov8" title="1">{
+        return s.list.GetSize() == 0
+}</span>
+
+func (s *Stack) Print() string <span class="cov8" title="1">{
+        if s.Empty() </span><span class="cov8" title="1">{
+                return "[] (top-&gt;bottom)"
+        }</span>
+        <span class="cov8" title="1">return s.list.Print() + " (top-&gt;bottom)"</span>
+}</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
