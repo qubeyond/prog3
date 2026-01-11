@@ -1,0 +1,1 @@
+SELECT * FROM Files WHERE filename = $1;
