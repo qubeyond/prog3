@@ -40,7 +40,7 @@ std::shared_ptr<Huffman::Node> Huffman::MinHeap::pop() {
     return res;
 }
 
-void Huffman::buildCodes(std::shared_ptr<Huffman::Node> root, const std::string& code, HashTable& table) {
+void Huffman::buildCodes(std::shared_ptr<Huffman::Node> root, const std::string& code, HashTableOpen& table) {
     if (!root) return;
     if (!root->left && !root->right) {
         std::cout << root->ch << ": " << code << std::endl;
@@ -78,6 +78,6 @@ void Huffman::compress(const std::string& text) {
         heap.push(combined);
     }
 
-    HashTable dummy(100);
+    HashTableOpen dummy(100);
     buildCodes(heap.pop(), "", dummy);
 }

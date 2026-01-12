@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
-#include "6/HashTable.hpp"
+#include "6/HashTableOpen.hpp"
 
-TEST(HashTableTest, BasicInsertionAndSearch) {
-    HashTable ht(100);
+TEST(HashTableOpenTest, BasicInsertionAndSearch) {
+    HashTableOpen ht(100);
     ht.insert("523456795", 1774);
     
     auto res = ht.search("523456795");
@@ -10,16 +10,16 @@ TEST(HashTableTest, BasicInsertionAndSearch) {
     EXPECT_EQ(*res, 1774);
 }
 
-TEST(HashTableTest, UpdateValue) {
-    HashTable ht(100);
+TEST(HashTableOpenTest, UpdateValue) {
+    HashTableOpen ht(100);
     ht.insert("test", 10);
     ht.insert("test", 20);
     EXPECT_EQ(ht.search("test").value_or(0), 20);
     EXPECT_EQ(ht.size(), 1);
 }
 
-TEST(HashTableTest, DeletionLogic) {
-    HashTable ht(10);
+TEST(HashTableOpenTest, DeletionLogic) {
+    HashTableOpen ht(10);
     ht.insert("key1", 1);
     ht.insert("key2", 2);
     
@@ -29,8 +29,8 @@ TEST(HashTableTest, DeletionLogic) {
     EXPECT_EQ(ht.size(), 1);
 }
 
-TEST(HashTableTest, FoldingHashLogic) {
-    HashTable ht(10000);
+TEST(HashTableOpenTest, FoldingHashLogic) {
+    HashTableOpen ht(10000);
     // Проверка примера из задания: 523456795 -> 523+456+795 = 1774
     // В нашей реализации calculate_folding_hash возвращает (сумму % capacity)
     ht.insert("523456795", 1);

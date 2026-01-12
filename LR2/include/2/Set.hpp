@@ -1,5 +1,5 @@
 #pragma once
-#include "6/HashTable.hpp"
+#include "6/HashTableOpen.hpp"
 #include <string>
 
 class Set {
@@ -12,5 +12,5 @@ public:
     size_t size() const noexcept;
 
 private:
-    HashTable table_;
+    HashTableOpen table_;
 };

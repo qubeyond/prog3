@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
 #include <optional>
-#include "6/HashTable.hpp"
+#include <memory>
+#include "6/HashTableOpen.hpp"
 
 class LruCache {
     struct Node {

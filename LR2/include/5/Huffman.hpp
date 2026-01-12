@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
-#include "6/HashTable.hpp"
+#include "6/HashTableOpen.hpp"
 #include "4/Array.hpp"
 
 class Huffman {
@@ -26,5 +26,5 @@ private:
         size_t size() const { return data.size(); }
     };
 
-    static void buildCodes(std::shared_ptr<Node> root, const std::string& code, HashTable& table);
+    static void buildCodes(std::shared_ptr<Node> root, const std::string& code, HashTableOpen& table);
 };

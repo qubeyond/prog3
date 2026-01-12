@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
-#include <memory>
+#include <vector>
 #include <optional>
 
-class HashTable {
+class HashTableOpen {
 public:
     struct Entry {
         std::string key;
@@ -12,24 +12,15 @@ public:
         bool deleted = false;
     };
 
-    explicit HashTable(size_t cap = 100003);
-    
-    ~HashTable() = default;
-    HashTable(const HashTable&) = delete;
-    HashTable& operator=(const HashTable&) = delete;
-    HashTable(HashTable&&) noexcept = default;
-    HashTable& operator=(HashTable&&) noexcept = default;
-
+    explicit HashTableOpen(size_t cap = 100003);
     void insert(const std::string& key, int value);
     std::optional<int> search(const std::string& key) const;
     void remove(const std::string& key);
-    
-    size_t size() const noexcept { return size_; }
+    size_t size() const { return size_; }
 
 private:
     size_t calculate_hash(const std::string& key) const;
-    
     size_t capacity_;
+    std::vector<Entry> table_;
     size_t size_ = 0;
-    std::unique_ptr<Entry[]> table_;
 };

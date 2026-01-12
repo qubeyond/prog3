@@ -1,24 +1,31 @@
 #include <iostream>
 #include <string>
-#include <vector>
 #include "2/Set.hpp"
 
-int main(int argc, char* argv[]) {
-    Set s;
-    std::string query, value;
+int main() {
+    Set s; 
+    std::string cmd, value;
 
-    for (int i = 1; i < argc; ++i) {
-        std::string arg = argv[i];
-        if (arg == "--query" && i + 1 < argc) query = argv[++i];
-        if (arg == "--value" && i + 1 < argc) value = argv[++i];
-    }
+    std::cout << "Введите команду (SETADD, SETDEL, SET_AT) и значение, или EXIT для выхода:" << std::endl;
 
-    if (query == "SETADD") {
-        s.add(value);
-    } else if (query == "SETDEL") {
-        s.del(value);
-    } else if (query == "SET_AT") {
-        std::cout << (s.contains(value) ? "YES" : "NO") << std::endl;
+    while (std::cin >> cmd) {
+        if (cmd == "EXIT") {
+            break;
+        }
+
+        if (!(std::cin >> value)) {
+            break;
+        }
+
+        if (cmd == "SETADD") {
+            s.add(value);
+        } else if (cmd == "SETDEL") {
+            s.del(value);
+        } else if (cmd == "SET_AT") {
+            std::cout << (s.contains(value) ? "YES" : "NO") << std::endl;
+        } else {
+            std::cout << "Unknown command" << std::endl;
+        }
     }
 
     return 0;
